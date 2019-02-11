@@ -1,4 +1,0 @@
-Number of processes that came into the system:19
-Number of processes successfully completed:19
-Number of processes missed deadline:0
-Average wait time: 5.42105
