@@ -1,0 +1,256 @@
+Experiment 1
+
+1. Collect kernel dump of the running system using “echo c > /proc/sysrq-trigger”
+2. All the crash dump data gets stored in /var/crash/
+3. Launch kernel debugger “crash” on the kdump collected using “crash
+/usr/lib/debug/usr/lib/modules/<version>/vmlinux ./vmcore”
+        where <version> can be found by command: "uname -r"
+        My kernal release is 3.10.0-957.el7.x86_64
+4. Few commands like “bt”, “ps”, “dev” were tried out
+
+
+Experiment 2
+1. As a normal user, run two processes of the “sample” program shared in the class in two different ssh sessions.
+2. Open a third ssh session.
+3. To obtain pid of the process use pidof command. pidof takes process name as argument.
+
+$ pidof sample
+Output:
+3937 3940
+
+4. Collect pmap of both the processes from a third ssh session.  
+pmap gives report memory map of a process. It take pid as its argument.
+
+$ pmap 3940
+
+Output:
+3940:   ./sample
+Address           Kbytes     RSS   Dirty Mode  Mapping
+0000000000400000       4       4       0 r-x-- sample
+0000000000600000       4       4       4 r---- sample
+0000000000601000       4       4       4 rw--- sample
+00007fdda8a4b000    1800     260       0 r-x-- libc-2.17.so
+00007fdda8c0d000    2048       0       0 ----- libc-2.17.so
+00007fdda8e0d000      16      16      16 r---- libc-2.17.so
+00007fdda8e11000       8       8       8 rw--- libc-2.17.so
+00007fdda8e13000      20      12      12 rw---   [ anon ]
+00007fdda8e18000     136     112       0 r-x-- ld-2.17.so
+00007fdda9030000      12      12      12 rw---   [ anon ]
+00007fdda9036000      12       8       8 rw---   [ anon ]
+00007fdda9039000       4       4       4 r---- ld-2.17.so
+00007fdda903a000       4       4       4 rw--- ld-2.17.so
+00007fdda903b000       4       4       4 rw---   [ anon ]
+00007ffff904a000     132      16      16 rw---   [ stack ]
+00007ffff9183000       8       4       0 r-x--   [ anon ]
+ffffffffff600000       4       0       0 r-x--   [ anon ]
+---------------- ------- ------- ------- 
+total kB            4220     472      92
+
+$ pmap 3937
+
+Output:
+3937:   ./sample
+Address           Kbytes     RSS   Dirty Mode  Mapping
+0000000000400000       4       4       0 r-x-- sample
+0000000000600000       4       4       4 r---- sample
+0000000000601000       4       4       4 rw--- sample
+00007f0591461000    1800     260       0 r-x-- libc-2.17.so
+00007f0591623000    2048       0       0 ----- libc-2.17.so
+00007f0591823000      16      16      16 r---- libc-2.17.so
+00007f0591827000       8       8       8 rw--- libc-2.17.so
+00007f0591829000      20      12      12 rw---   [ anon ]
+00007f059182e000     136     112       0 r-x-- ld-2.17.so
+00007f0591a46000      12      12      12 rw---   [ anon ]
+00007f0591a4c000      12       8       8 rw---   [ anon ]
+00007f0591a4f000       4       4       4 r---- ld-2.17.so
+00007f0591a50000       4       4       4 rw--- ld-2.17.so
+00007f0591a51000       4       4       4 rw---   [ anon ]
+00007ffc5d5bf000     132      16      16 rw---   [ stack ]
+00007ffc5d5f7000       8       4       0 r-x--   [ anon ]
+ffffffffff600000       4       0       0 r-x--   [ anon ]
+---------------- ------- ------- ------- 
+total kB            4220     472      92
+
+5. In the kernal debugger, we analyze the processes address space in the following way
+
+$ crash> ps | grep sample
+
+Output:
+
+PID    PPID  CPU       TASK        ST  %MEM     VSZ    RSS  COMM
+3937   3919   0  ffff8d7295c3a080  IN   0.0    4216    472  sample
+3940   3892   0  ffff8d71b6129040  IN   0.0    4216    472  sample
+
+This command displays process status information. ST shows that the process "sample" is in "IN" state.
+
+crash> vm -m 3940
+
+vm - virtual memory
+-m :dump the mm_struct assocated with the task.
+Display the mm_struct for PID 3940 
+
+Output:
+
+PID: 3940   TASK: ffff8d71b6129040  CPU: 0   COMMAND: "sample"
+struct mm_struct {
+  mmap = 0xffff8d7297052d80, 
+  mm_rb = {
+    rb_node = 0xffff8d7297052890
+  }, 
+  mmap_cache = 0xffff8d7297052948, 
+  get_unmapped_area = 0xffffffffae430e90, 
+  unmap_area = 0xffffffffae5f0d20, 
+  mmap_base = 140590000095232, 
+  mmap_legacy_base = 47042670292992, 
+  task_size = 140737488351232, 
+  cached_hole_size = 0, 
+  free_area_cache = 140590000095232, 
+  highest_vm_end = 140737372508160, 
+  pgd = 0xffff8d7252252000, 
+  mm_users = {
+    counter = 1
+  }, 
+  mm_count = {
+    counter = 1
+  }, 
+  nr_ptes = {
+    counter = 6
+  }, 
+  map_count = 16, 
+  page_table_lock = {
+    {
+      rlock = {
+        raw_lock = {
+          val = {
+            counter = 0
+          }
+        }
+
+
+crash> vm -m 3937
+
+Display the mm_struct for PID 3937
+
+Output:
+
+PID: 3937   TASK: ffff8d7295c3a080  CPU: 0   COMMAND: "sample"
+struct mm_struct {
+  mmap = 0xffff8d72976d7438, 
+  mm_rb = {
+    rb_node = 0xffff8d72976d72a8
+  }, 
+  mmap_cache = 0xffff8d72976d7510, 
+  get_unmapped_area = 0xffffffffae430e90, 
+  unmap_area = 0xffffffffae5f0d20, 
+  mmap_base = 139661895081984, 
+  mmap_legacy_base = 47970775306240, 
+  task_size = 140737488351232, 
+  cached_hole_size = 0, 
+  free_area_cache = 139661895081984, 
+  highest_vm_end = 140721875030016, 
+  pgd = 0xffff8d7252106000, 
+  mm_users = {
+    counter = 1
+  }, 
+  mm_count = {
+    counter = 1
+  }, 
+  nr_ptes = {
+    counter = 6
+  }, 
+  map_count = 16, 
+  page_table_lock = {
+    {
+      rlock = {
+        raw_lock = {
+          val = {
+            counter = 0
+          }
+        }
+
+
+crash> vm -p 3940
+
+-p :translate each virtual page to its physical address, or if the page is not mapped, its swap device and offset, or filename and offset.
+
+Output:
+
+PID: 3940   TASK: ffff8d71b6129040  CPU: 0   COMMAND: "sample"
+       MM               PGD          RSS    TOTAL_VM
+ffff8d7295d63200  ffff8d7252252000   472k    4216k  
+      VMA           START       END     FLAGS FILE
+ffff8d7297052d80     400000     401000 8000875 /home/vijay/sample
+VIRTUAL     PHYSICAL
+400000      d0a6a000
+      VMA           START       END     FLAGS FILE
+ffff8d7297052ca8     600000     601000 8100871 /home/vijay/sample
+VIRTUAL     PHYSICAL
+600000      d0e6f000
+      VMA           START       END     FLAGS FILE
+ffff8d72970521b0     601000     602000 8100873 /home/vijay/sample
+VIRTUAL     PHYSICAL
+601000      d0ead000
+      VMA           START       END     FLAGS FILE
+ffff8d72970525e8 7fdda8a4b000 7fdda8c0d000 8000075 /usr/lib64/libc-2.17.so
+VIRTUAL     PHYSICAL
+7fdda8a4b000  dbd05000
+7fdda8a4c000  3535c000
+7fdda8a4d000  35c4c000
+7fdda8a4e000  35358000
+7fdda8a4f000  dbd8c000
+
+
+
+crash> vm -p 3937
+
+Output:
+
+PID: 3937   TASK: ffff8d7295c3a080  CPU: 0   COMMAND: "sample"
+       MM               PGD          RSS    TOTAL_VM
+ffff8d725208f840  ffff8d7252106000   472k    4216k  
+      VMA           START       END     FLAGS FILE
+ffff8d72976d7438     400000     401000 8000875 /home/vijay/sample
+VIRTUAL     PHYSICAL
+400000      d0a6a000
+      VMA           START       END     FLAGS FILE
+ffff8d72976d7360     600000     601000 8100871 /home/vijay/sample
+VIRTUAL     PHYSICAL
+600000      d09ec000
+      VMA           START       END     FLAGS FILE
+ffff8d72976d7bd0     601000     602000 8100873 /home/vijay/sample
+VIRTUAL     PHYSICAL
+601000      d5284000
+      VMA           START       END     FLAGS FILE
+ffff8d72976d7948 7f0591461000 7f0591623000 8000075 /usr/lib64/libc-2.17.so
+VIRTUAL     PHYSICAL
+7f0591461000  dbd05000
+7f0591462000  3535c000
+7f0591463000  35c4c000
+7f0591464000  35358000
+7f0591465000  dbd8c000
+
+
+We know that both the processes use libc. So the physical address of the libc's text segment will be same. 
+To show this we can use the following commands:
+
+crash> vm -p  3937 | grep libc | head
+Output:
+     VMA           START       END     FLAGS FILE
+ffff8d72976d7948 7f0591461000 7f0591623000 8000075 /usr/lib64/libc-2.17.so
+
+crash> vm -p  3937 | grep 7f0591461000 | head
+Output:
+ 7f0591461000  dbd05000
+
+
+crash> vm -p  3940 | grep libc | head
+Output:
+     VMA           START       END     FLAGS FILE
+ffff8d72970525e8 7fdda8a4b000 7fdda8c0d000 8000075 /usr/lib64/libc-2.17.so
+
+
+crash> vm -p  3940 | grep 7fdda8a4b000 | head
+Output:
+ 7fdda8a4b000  dbd05000
+
+ Here we can easily see that the virtual address space of libc in both processes is 7f0591461000 and 7fdda8a4b000 but the Physical address space dbd05000 is same.

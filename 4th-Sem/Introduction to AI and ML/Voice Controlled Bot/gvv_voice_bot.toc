@@ -1,0 +1,7 @@
+\contentsline {section}{\numberline {1}Dataset}{1}{section.1}
+\contentsline {section}{\numberline {2}Implementation}{1}{section.2}
+\contentsline {section}{\numberline {3}Building the neural network}{1}{section.3}
+\contentsline {subsection}{\numberline {3.1}Problem Statement}{1}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Solution: Gradient Descent}{2}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Dataset}{2}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Training}{2}{subsection.3.4}

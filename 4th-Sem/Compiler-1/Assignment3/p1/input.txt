@@ -1,0 +1,4 @@
+1. e2-e4 e7-e1=Q
+2. Ng1-f3 Nb8-c6
+3. Bf1-b5 Ng8-f6
+4. Bb5xc6 b7xc6

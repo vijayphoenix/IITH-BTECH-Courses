@@ -1,0 +1,9 @@
+input: int
+x : float
+x = 2 
+INIT
+input = readInt
+Select: 0
+if input > x:
+	1 1 1 1 1 1 0 0
+Delay : x

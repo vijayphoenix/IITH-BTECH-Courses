@@ -1,0 +1,110 @@
+        README file for Programming Assignment 2 (C++ edition)
+=======================================================================
+
+                        Write-up for PA2
+                        ----------------
+=======================================================================
+                       Overall structure
+=======================================================================
+
+The lexer implemented has three exclusive start states:
+- comment - Handles multiline comments related properties
+- string - Handles strings
+- end_string - Handles errors encountered with strings
+
+INITIAL - Handles integers, type identifiers, object dentifiers,       special notaitons, keywords, single line comments and white space.
+
+The order in which we tokenize the elements are:
+1. Newline and single line comments 
+2. Multiline comments.
+3. strings
+4. Whitespaces
+5. Keywords, we need to match keywords before identifiers, because if 
+   we change this order, we may end up with matching some keywords to 
+   identifiers, which is obviously wrong.
+6. Special notations
+7. Integers
+8. Identifiers
+9. Remaining non valid characters
+
+=======================================================================
+                             Design rules
+=======================================================================
+
+-------------------- Design rules for comments ------------------------
+
+
+There are two states for comments: INITIAL, comment.
+1. When at the INITIAL condition, if "--" is encountered, it means it is a single line comment. Encountering an EOF in a single line comment is not considered an erroneous case.
+2. When "(*" is encountered during INITIAL state, we enter the comment state. When EOF is encountered in comment state, error is reported. 
+A comment ends when it encounters "*)".
+
+
+-------------------- Design rules for strings -------------------------
+
+
+There are three states related to strings: INITIAL, string and end_string 
+1. When " is encountered in the INITIAL state, the string_buf is reset to empty and the string state starts. When a non escaped " and non escaped \n is encountered in the string state, we return back to INITIAL state. 
+2. In the string state, string length is checked whenever new piece of
+string is added to string_buf. Report error if overflow occurs and enter end_string state.
+3. Replace \n, \t, \b, \f with a single char which corresponds to their
+escaped meaning.
+4. Report error if null character is encountered and enter end_string state
+5. for \c where c doesn't equal to n,t,b,f, null return c itself
+6. When an escape is followed by a new line, just add a \n to the string_buf
+7. When a new line is encountered without an escape, report error
+8. Inside end_string state, either a new line starts without escape, or a " without escape is encountered, return to the INITIAL state. If EOF is encountered, return error. Otherwise stay in the end_string state. 
+9. Different error messages are provided for different errors.
+10. Increment line number when you encounter a newline.
+
+
+-------------------- Design rules for Keywords ------------------------
+
+
+All the keywords except true and false, are case insensitive, so 
+we active the case insensitive option, and make the 
+definitions for keywords. For example:
+CLASS          ?i:class
+
+And for true and false whose first character is case sensitive and must
+be lowere case, we use the following definitions:
+TRUE        (t)(?i:rue)
+FALSE       (f)(?i:alse)
+
+
+-------------------- Design rules for Identifiers ---------------------
+
+Type identifiers begin with a capital letter, object identifiers begin
+with a lower case letter, so we define them as follows:
+
+TYPE        [[:upper:]][[:alnum:]_]*
+OBJECT      [[:lower:]][[:alnum:]_]*
+
+
+-------------------- Design rules for Intergers -----------------------
+For integers, we use:
+INT         [[:digit:]]+
+
+-------------------- Design rules for Operators -----------------------
+
+For special notaitons, we use:
+
+DARROW      =>
+ASSIGN      <-
+LESSTHAN    <=
+OPERATOR    "{"|"}"|","|":"|"."|"@"|"+"|"-"|"*"|"/"|"~"|"<"|"="|"("|")"
+            |";"
+
+
+If an input cannot be matched to any of the above rules, an error 
+message will be generated. 
+
+
+======================================================================
+                            Testing
+======================================================================
+
+I have conducted many tests on my code and compared its output with output of the binary lexer file provided to us. 
+Some tests are provided for verification purpose.
+Heavy tests are conducted on strings, to ensure correctness.
+Some example files are used test other ascepts like int identifiers, keywords, special symbols etc

@@ -1,0 +1,7 @@
+(*\
+
+\\\*\)
+
+out_string("helloooooooooooooo       \
+               \" "
+               );

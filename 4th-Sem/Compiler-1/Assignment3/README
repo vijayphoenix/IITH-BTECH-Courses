@@ -1,0 +1,106 @@
+Roll No.: CS17BTECH11040
+Name: Vijay Tadikamalla
+
+----------------------------------------------------------------------------------
+How to run the program p1
+----------------------------------------------------------------------------------
+1. Browse to the directory where the files 'input.txt' ,'p1.l', 'p1.y' are located.
+2. Open the terminal at this location.
+3. Execute the following instructions
+	make
+	./p1.out <input.txt
+	
+
+----------------------------------------------------------------------------------
+How to run the program p2
+----------------------------------------------------------------------------------
+1. Browse to the directory where the files 'input.txt' ,'p2.l', 'p2.y' are located.
+2. Open the terminal at this location.
+3. Execute the following instructions
+	make
+	./p1.out <input.txt >output.c
+4. The output of the file is now stored in output.c
+
+
+----------------------------------------------------------------------------------
+P1: Chess
+----------------------------------------------------------------------------------
+Assumptions / Comments (if any):
+The program expects a valid and correct input.
+Program may not produce expected output for a some incorrect input. 
+The output of the program is as per the specification of given in the assignment.
+	
+# Is the program complete? Are there any assumptions made? Any other comments?
+Yes the program is complete. 
+Some test cases are provided which show the correctness of the program.
+
+Approach :
+# How do you solve this problem?
+The input file is broken into numerou tokens like T_MOVE,T_PROMOTE. Some other 
+tokens like NEWLINE, WHITESPACES, INDEX/LINE NUMBER are eaten up and not passed 
+to the parser.
+Each move can be
+1. A simple move
+2. A move which results in capture of other chess piece.
+3. A move which in which pawn can get promoted to chess piece of higher value.
+
+A move is matched with the help of a simple regular expression.
+
+With the help of these tokens the parser generates the final board position.
+
+
+-----------------------------------------------------------------------------------
+P2: Calculator
+-----------------------------------------------------------------------------------
+Assumptions / Comments (if any):
+
+The program expects a valid and correct input.
+
+Some assumptions made:-
+1. Due to ambiguity in the input language, we are not able to differentiate 
+   between the variable and the functions. So, I assumed that the input language 
+   has only three functions (Delay, Select, readInt).
+2. Only "if" and "else" keywords are case insenstive. Rest all keywords and 
+   identifiers are case sensitive.
+3. Program will generate the output file according to the input file. 
+   No error handling is done. 
+   Program may not produce expected output for a some incorrect input. 
+The output of the program is as per the specification of given in the assignment.
+	
+# Is the program complete? Are there any assumptions made? Any other comments?
+1. As specified in the assignment a "If" "Else" statement accepts only one line 
+   seven segment display configuration i.e. no nesting of "if" "else" statement 
+   is allowed.
+2. The program does not indent the code. 
+3. Some test cases are provided which show the correctness of the program.
+
+Other Comments
+1. I did not assume that INIT occur can only at the start of the program. 
+   Due to this assumption some warnings like shift/reduce conflicts and reduce/reduce 
+   conflict occur.
+2. These warning can be removed if we assume that INIT can occur only in the start of 
+   the program.
+
+Approach :
+# How do you solve this problem?
+
+The input program file is broken down to numerous tokens like INT, IDENTIFIER, 
+COMP_OP(comparision operator), ASSIGN(assignment operator), INIT, DELAY, SELECT, 
+readINT, COLON, if, else and other tokens which are eaten up like Single line comments,
+NEWLINE and WHITESPACES.
+
+We now parse the input file with the help of simple self explanatory grammer.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

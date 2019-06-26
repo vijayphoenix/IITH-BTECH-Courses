@@ -1,0 +1,14 @@
+# This specification uses one 7-segment display.
+# Depending upon input it prints zero or one.
+INIT
+input: int
+input = readInt
+Select: 1
+if input <= 0:
+# a b c d e f g dp
+#Display 0
+1 1 1 1 1 1 0 0
+Else:
+#Display 1
+0 1 1 0 0 0 0 0
+Delay: 40

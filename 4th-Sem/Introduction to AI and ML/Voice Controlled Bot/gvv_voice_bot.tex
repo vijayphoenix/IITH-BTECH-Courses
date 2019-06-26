@@ -1,0 +1,403 @@
+\documentclass[journal,12pt,twocolumn]{IEEEtran}
+%
+\usepackage{setspace}
+\usepackage{gensymb}
+\usepackage{xcolor}
+\usepackage{caption}
+%\usepackage{subcaption}
+%\doublespacing
+\singlespacing
+
+%\usepackage{graphicx}
+%\usepackage{amssymb}
+%\usepackage{relsize}
+\usepackage[cmex10]{amsmath}
+\usepackage{mathtools}
+%\usepackage{amsthm}
+%\interdisplaylinepenalty=2500
+%\savesymbol{iint}
+%\usepackage{txfonts}
+%\restoresymbol{TXF}{iint}
+%\usepackage{wasysym}
+\usepackage[breaklinks]{hyperref}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{txfonts}
+\usepackage{stfloats}
+\usepackage{cite}
+\usepackage{cases}
+\usepackage{subfig}
+%\usepackage{xtab}
+\usepackage{longtable}
+\usepackage{multirow}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+%\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{mathtools}
+%\usepackage{iithtlc}
+%\usepackage[framemethod=tikz]{mdframed}
+\usepackage{listings}
+
+
+%\usepackage{stmaryrd}
+        \def\inputGnumericTable{}                                 %%
+
+    \usepackage[latin1]{inputenc}                                 %%
+    \usepackage{color}                                            %%
+    \usepackage{array}                                            %%
+    \usepackage{longtable}                                        %%
+    \usepackage{calc}                                             %%
+    \usepackage{multirow}                                         %%
+    \usepackage{hhline}                                           %%
+    \usepackage{ifthen}                                           %%
+    \usepackage{lscape}                                           %%
+
+
+%\usepackage{wasysym}
+%\newcounter{MYtempeqncnt}
+\DeclareMathOperator*{\Res}{Res}
+%\renewcommand{\baselinestretch}{2}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\renewcommand\thesectiondis{\arabic{section}}
+\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
+\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
+
+%\renewcommand{\labelenumi}{\textbf{\theenumi}}
+%\renewcommand{\theenumi}{P.\arabic{enumi}}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\lstset{
+language=Python,
+frame=single, 
+breaklines=true,
+columns=fullflexible
+}
+
+
+
+\begin{document}
+%
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{problem}{Problem}
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{example}{Example}[section]
+\newtheorem{definition}{Definition}[section]
+%\newtheorem{algorithm}{Algorithm}[section]
+%\newtheorem{cor}{Corollary}
+\newcommand{\BEQA}{\begin{eqnarray}}
+\newcommand{\EEQA}{\end{eqnarray}}
+\newcommand{\define}{\stackrel{\triangle}{=}}
+
+\bibliographystyle{IEEEtran}
+%\bibliographystyle{ieeetr}
+
+\providecommand{\nCr}[2]{\,^{#1}C_{#2}} % nCr
+\providecommand{\nPr}[2]{\,^{#1}P_{#2}} % nPr
+\providecommand{\mbf}{\mathbf}
+\providecommand{\pr}[1]{\ensuremath{\Pr\left(#1\right)}}
+\providecommand{\qfunc}[1]{\ensuremath{Q\left(#1\right)}}
+\providecommand{\sbrak}[1]{\ensuremath{{}\left[#1\right]}}
+\providecommand{\lsbrak}[1]{\ensuremath{{}\left[#1\right.}}
+\providecommand{\rsbrak}[1]{\ensuremath{{}\left.#1\right]}}
+\providecommand{\brak}[1]{\ensuremath{\left(#1\right)}}
+\providecommand{\lbrak}[1]{\ensuremath{\left(#1\right.}}
+\providecommand{\rbrak}[1]{\ensuremath{\left.#1\right)}}
+\providecommand{\cbrak}[1]{\ensuremath{\left\{#1\right\}}}
+\providecommand{\lcbrak}[1]{\ensuremath{\left\{#1\right.}}
+\providecommand{\rcbrak}[1]{\ensuremath{\left.#1\right\}}}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\newcommand{\sgn}{\mathop{\mathrm{sgn}}}
+\providecommand{\abs}[1]{\left\vert#1\right\vert}
+\providecommand{\res}[1]{\Res\displaylimits_{#1}} 
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\mtx}[1]{\mathbf{#1}}
+\providecommand{\mean}[1]{E\left[ #1 \right]}
+\providecommand{\fourier}{\overset{\mathcal{F}}{ \rightleftharpoons}}
+\providecommand{\ztrans}{\overset{\mathcal{Z}}{ \rightleftharpoons}}
+
+%\providecommand{\hilbert}{\overset{\mathcal{H}}{ \rightleftharpoons}}
+\providecommand{\system}{\overset{\mathcal{H}}{ \longleftrightarrow}}
+	%\newcommand{\solution}[2]{\textbf{Solution:}{#1}}
+\newcommand{\solution}{\noindent \textbf{Solution: }}
+\providecommand{\dec}[2]{\ensuremath{\overset{#1}{\underset{#2}{\gtrless}}}}
+\numberwithin{equation}{section}
+%\numberwithin{equation}{subsection}
+%\numberwithin{problem}{subsection}
+%\numberwithin{definition}{subsection}
+\makeatletter
+\@addtoreset{figure}{problem}
+\makeatother
+
+\let\StandardTheFigure\thefigure
+%\renewcommand{\thefigure}{\theproblem.\arabic{figure}}
+\renewcommand{\thefigure}{\theproblem}
+
+
+
+\def\putbox#1#2#3{\makebox[0in][l]{\makebox[#1][l]{}\raisebox{\baselineskip}[0in][0in]{\raisebox{#2}[0in][0in]{#3}}}}
+     \def\rightbox#1{\makebox[0in][r]{#1}}
+     \def\centbox#1{\makebox[0in]{#1}}
+     \def\topbox#1{\raisebox{-\baselineskip}[0in][0in]{#1}}
+     \def\midbox#1{\raisebox{-0.5\baselineskip}[0in][0in]{#1}}
+
+\vspace{3cm}
+
+\title{ 
+	\logo{Voice Recognition through Machine Learing}
+}
+\author{Raktim Gautam Goswami$^{1}$, Abhishek Bairagi$^{2}$ \& G V V Sharma$^{3}$ 
+%<-this  stops a space
+
+\thanks{The authors are with the Department
+of Electrical Engineering, Indian Institute of Technology, Hyderabad
+502285 India .  e-mail: 1. ee17btech11051@iith.ac.in, 2. ee17btech11004@iith.ac.in,  
+3. gadepall@iith.ac.in}% <-this % stops a space
+%%\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+%%\thanks{Manuscript received April 19, 2005; revised January 11, 2007.}}
+
+}
+
+
+
+
+% make the title area
+\maketitle
+%\newpage
+
+\tableofcontents
+
+\renewcommand{\thefigure}{\theenumi}
+\renewcommand{\thetable}{\theenumi}
+
+
+\bigskip
+
+\begin{abstract}
+%
+This manual shows how to develop a voice recognition algorithm and use it to 
+control a toycar. 
+%
+\end{abstract}
+
+
+\section{Dataset}
+%
+\begin{enumerate}[label=\thesection.\arabic*
+,ref=\thesection.\theenumi]
+
+
+\item Record 'forward' 80 times in your laptop and save as 'forwardi.wav' for $i 
+= 1,\dots, 80$.
+%
+\item Record files by entering this command in terminal - "arecord filename.wav" and press Ctrl+C to stop recording.(make sure your recorded audios are  less than 3 sec of duration.)
+\item Repeat by recording 'left', 'right', 'back' and 'stop'. Make sure that the 
+audio files for each command are in separate directories. Download the following 
+directory for reference
+\begin{lstlisting}
+https://github.com/gadepall/EE1390/trunk/AI-ML/audio_dataset
+\end{lstlisting}
+\item Use the following script to generate a dataset for 'back' command. Explain 
+through a block diagram.
+\begin{lstlisting}
+https://github.com/raktimgg/Voice-recognition-bot/blob/master/AI-ML/codes/25files.py
+\end{lstlisting}
+%
+\solution
+to generate the dataset needed for training. The following diagram explains how this 
+is done for the back command.
+\\
+back (80 files)$\overset{25files.py}{\rightarrow}2000 files$.
+	%
+\item After creating 2000 back files rename all the files in the format 'backi.wav' for $i 
+= 1,\dots, 2000$. 
+Use the given link for renaming.
+\begin{lstlisting}
+https://github.com/raktimgg/Voice-recognition-bot/blob/master/AI-ML/codes/rename_back.py
+\end{lstlisting}
+%
+\item Suitably modify the above script to generate similar datasets for 'left', 'right', 'stop' and 'forward'.So now we have 10000 audio files in total.
+%
+
+\item Store the complete dataset in a directory and run \textbf{code.py} from  within the 
+directory.  Note that this should be done on a powerful workstation.
+\begin{lstlisting}
+https://github.com/raktimgg/Voice-recognition-bot/blob/master/AI-ML/codes/code.py
+\end{lstlisting}
+\item This will generate two files\textbf{W1.out} and \textbf{b.out}. Save the files in same directory.
+\end{enumerate}
+%
+
+%\begin{figure}[ht!]
+%\begin{center}
+%\includegraphics[width=\columnwidth]{./figs/HC05}
+%\end{center}
+%\caption{HC05 Bluetooth module}
+%\label{fig:hc05}
+%\end{figure}
+%
+%	\input{./figs/hc05.tex}
+
+
+%
+\section{Implementation}
+\begin{enumerate}[label=\thesection.\arabic*
+,ref=\thesection.\theenumi]
+\item Execute \textbf{record.py} and issue any of the commands 'forward', 'left', 'right', 'back' 
+and 'stop'. The output will be as per the following table.
+\begin{center}
+\begin{tabular}{ |l|l| } 
+ \hline
+ back    & 0  \\ 
+ forward & 1  \\ 
+ left    & 2  \\
+ right   & 3  \\
+ stop    & 4  \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+%
+\item Now Save the files 'W1.out' and 'b.out' in raspberry pi. 
+%\begin{figure}[!h]
+%\begin{center}
+%\includegraphics[width = \columnwidth]{./figs/app}
+%%\includegraphics[width = 7cm, height = 10cm]{./figs/app}
+%\end{center}
+%\caption{}
+%\label{fig:App}
+%\end{figure}
+\item Implementation on raspberry pi.(yet to be done )
+
+\end{enumerate}
+
+\section{Building the neural network}
+\subsection{Problem Statement}
+\begin{enumerate}[label=\thesubsection.\arabic*
+,ref=\thesection.\theenumi]
+\item Consider $\mbf{x}$ be $4043 \times 1$ to be human voice issuing either 'forward', 'left', 
+'right', 'back'  and 
+'stop'.  Let $\mbf{W}$ be $4043 \times 5$ and $\mbf{b}$ be $1 \times 5$. $\mbf{W}$ and $\mbf{b}$ 
+are the machine parameters. Then the machine makes a decision based on
+\begin{equation}
+\label{eq:model}
+\mbf{y1} = \mbf{x}^{T}\mbf{W}+ \mbf{b}
+\end{equation}
+\item Now, apply the sigmoid function to all the elements of the output matrix (y1) to scale the values between 0 and 1.
+\begin{equation}
+\label{eq:model}
+\hat{\mbf{y}} = 1\div(1+exp(-\mbf{y1}))
+\end{equation}
+\item The problem is to estimate $\mbf{W}$ and $\mbf{b}$.  This is done by considering the error(cost) function,  
+\begin{equation}
+\label{eq:cost}
+J\brak{\mbf{W},\mbf{b}}  = \frac{1}{2}\norm{\mbf{y}-\hat{\mbf{y}}}^2
+\end{equation}
+\item We need to find the minimum of error function for optimising the equations.
+\end{enumerate}
+\subsection{Solution: Gradient Descent}
+\begin{enumerate}[label=\thesubsection.\arabic*
+,ref=\thesection.\theenumi]
+\item $\mbf{W}$ and $\mbf{b}$ can be estimated from \eqref{eq:cost} using
+\begin{align}
+\label{eq:grad_def}
+\mbf{W}(n+1) &= \mbf{W}(n) - \frac{\alpha}{2}\frac{\partial J\brak{\mbf{W},\mbf{b}} }{\partial\mbf{W}}\mbf{W}(n)
+\\
+\mbf{b}(n+1) &= \mbf{b}(n) - \frac{\alpha}{2}\frac{\partial J\brak{\mbf{W},\mbf{b}}}{\partial\mbf{b}}
+\end{align}
+Show that \eqref{eq:grad_def} can be expressed as
+\begin{align}
+\mbf{W}(n+1) &= \mbf{W}(n) - \alpha\lsbrak{\mbf{x}^{T}(n)\mbf{x}(n)\mbf{W}(n)}
+\nonumber \\
+& \quad +\rsbrak{\mbf{x}^{T}(n)\mbf{b}(n)-\mbf{x}^T(n)\mbf{y}(n)}
+\\
+\mbf{b}(n+1) &= \mbf{b}(n) - \alpha\sbrak{\mbf{x}\mbf{W}-\mbf{b}-\mbf{y}}
+\end{align}
+\solution From  \eqref{eq:cost} and \eqref{eq:model}, 
+%\begin{multline}
+%\frac{\partial J\brak{\mbf{W},\mbf{b}} }{\partial\mbf{W}} 
+%\\
+%= \frac{\partial  
+%}{\partial\mbf{W}}\sbrak{\brak{\mbf{x}\mbf{W}+\mbf{b}-\mbf{y}}^T\brak{\mbf{x}\mbf{W}+\mbf{b}-\mbf{y}}}
+%\end{multline}
+\begin{align}
+J\brak{\mbf{W},\mbf{b}}  &= \frac{1}{2}\norm{\mbf{y}-\hat{\mbf{y}}}^2
+\\
+&=\brak{\mbf{x}\mbf{W}+\mbf{b}-\mbf{y}}^T\brak{\mbf{x}\mbf{W}+\mbf{b}-\mbf{y}}
+\\
+&=\brak{\mbf{W}^T\mbf{x}^T+\mbf{b}^T-\mbf{y}^T}\brak{\mbf{x}\mbf{W}+\mbf{b}-\mbf{y}}
+\\
+&=\mbf{W}^T\mbf{x}^T\mbf{x}\mbf{W}+\mbf{W}^T\mbf{x}^T\mbf{b}-\mbf{W}^T\mbf{x}^T\mbf{y}
+\\
+&\,+\mbf{b}^T\mbf{x}\mbf{W}+\mbf{b}^T\mbf{b}-\mbf{b}^T\mbf{y} - \mbf{y}^T\mbf{x}\mbf{W}
+\\
+& \, -  \mbf{y}^T\mbf{b} +  \mbf{y}^T \mbf{y}
+\label{eq:expand_cost}
+\end{align}
+Using
+\begin{align}
+\frac{\partial}{\partial\mbf{W}}\mbf{W}^T\mbf{x}^T\mbf{x}\mbf{W}
+&= 
+\end{align} 
+\end{enumerate}
+
+%\subsection{Theory} 
+%We have used linear regression in our model. Here, all the features are tried to be 
+%approximated using an n-dimensional straight line (n being the number of features). The equation used for this is 
+%\begin{equation} \sum_{i} Wi*xi + b \end{equation} In matrix form it is $$ out = W.X + B $$ The output(out) is then put as 
+%input to the sigmoid function and the output of it is a number scaled between 0 and 1. This is the actual output(Y') we are 
+%interested in .  The sigmoid function is defined as $$sigmoid(x) = 1/(1+exp(-x))$$ The cost function is then calculated using 
+%mean squared error as $$ J = 0.5*(Y - Y')^2$$ Gradient descent algorithm is used to get minimum error using the derivative of 
+%the error(J) with respect to weight (W).This process is carried on for a number of times to get the best accuracy. 
+%\paragraph{How is the descent algorithm obtained from the cost function?\newline} We initialized the parameters W1 and b . Now 
+%we want Mean Square Error function to be minimum.The way we do this is by taking the derivative (the tangential line to a 
+%function) of our cost function with respect to each parameter. Derivative at that point and it will give us a direction to 
+%move towards. And then we update the value of all the parameters according to the derivative obtained.And then we iterate the 
+%process(number of itterations are decided by us ) .We make steps down the cost function in the direction with the steepest 
+%descent. The size of each step is determined by the parameter $\alpha$, which is called the learning rate.The gradient descent 
+%algorithm is repeated until convergence: $Mj :=Mj-(learningrate)*(delta Loss)*input$ %$Mj :​= Mj​ - (learningrate)*(delta 
+%Loss)*input$ %%%%%%% to be updated
+%
+%
+
+
+\subsection{Dataset}
+\begin{enumerate}[label=\thesubsection.\arabic*
+,ref=\thesection.\theenumi]
+\item Record as many audio files of each of the words given below.\newline 
+1)Forward\newline
+2)Left\newline
+3)Right\newline
+4)Back\newline
+5)Stop\newline
+
+\item Recreate these by adding empty elements in the front and back in many different cobinations to create a dataset.
+
+\end{enumerate}
+\subsection{Training}
+\begin{enumerate}[label=\thesubsection.\arabic*
+,ref=\thesection.\theenumi]
+\item Import these soundfiles to an array in a python program using $soundfile$ library and convert to mfcc format using $python speech features$ library. 
+\item Extend the program to train the data, taking help from \textit{1.6}. Also add a function to test the accuracy.
+\item Note the accuracy.
+\item Add to the program, some code to store the generated weights(W1) and biases(b). 
+\end{enumerate}
+
+
+%\subsection{Transfering the weights to Raspberry Pi }
+%The weight(W1 and B) are saved in a file at the end of the code. These weights will be transferred to the raspberry pi and a simple program written, will record audio on the raspberry pi, do the calculations using the weights and predict the text output. This output will be sent,using bluetooth, to the toy car, which will move accordingly.
+
+\end{document}
+
+
+\grid
