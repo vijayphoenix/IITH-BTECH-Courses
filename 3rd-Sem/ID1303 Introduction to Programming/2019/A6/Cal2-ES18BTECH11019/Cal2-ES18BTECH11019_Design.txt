@@ -1,0 +1,91 @@
+Design Document of Calculator Application
+
+Choice of data types:
+        1. I chose 'int' data type for as return type and for all variables except for multiplication and square,
+           as they may easily exceed the value of 10^9. For addition return type is integer as INT_MAX value in gcc compiler is 2147483647
+        2. I have predefined "ll" as long long int at the beggining.
+
+Flow of Program:
+        1. Program displays the menu, and scans user choice from the user. And then, choice is received.
+        2. After taking the input from the user, program checks whether the choice input is valid,i.e, 1<=choice<=9,
+           else the program asks the user to enter the correct choice from the menu.
+        3. If the valid input is received, the program calculates the value for corresponding choice,
+           i.e, 1: Add  2: Subtract  3: Multiply  4: Divide 5: Modulus  6: Square  7: Square root  8: Log (Base 2)  9: Exit. I used Switch case statements to implement the if and else conditions.
+        4. If the choice is "1", I wrote a function which simply adds two numbers and returns the result.
+        5. If the choice is "2", I wrote a function which simply subtracts second from first and returns the result.
+        6. If the choice is "3", I wrote a multiplication function, the algorithm is used is repeated additon, for(int i=1;i<=second;i++) res+=first, returned result.
+        7. If the choice is "4", I wrote a Divison algorithm which is repeated subtraction, where if second number is 0,
+           it returns -1, it is a error case else I handled the division by the no. of times the second number can be subtracted from first, till first is >0.
+        8. If the choice is "5", I wrote a function which returns a %b, in which I handled for -x%y too, where x and y are positive.
+        9. If the choice is "6", I wrote a function which returns square of a number, which I implemented by using multiplication function.
+        10.If the choice is "7", I wrote a function which returns square root of a number, I calculated square root by checking all the squares and incrementing each count in a while loop
+           as follows, where it returns the floor of square root of the number.
+           k=0,s=0
+           while (s <= num):
+                s = s+k+k+1;//'s' stores the square of the number 'k'
+                k = k+1;//'k' stores the root of 's'
+            return k-1;
+        11.If the choice is "8", I wrote a function which returns log to base 2, I have implemented it by,
+           checking where the number lies between 2^i and 2^(i+1) through looping as follows,
+           cnt=0;
+           for(int i=1;i<num;i=mul(i,2))   ++cnt;
+           return cnt;
+        12. Else if the choice is "9", the program terminates and exits.
+        13. Else if any choice is entered other than 1 to 9 the program asks the user to give the correct input.
+
+Error Handling:
+        1. If the initial choice is not between 1 and 9 (inclusive) program asks user to enter correct input.
+        2. In division if the second number is "0" or if any of the number is negative the program returns error message.
+        3. In modulus function if second number is <=0, program raises an error.
+        4. In square root function if the input number is <0 program raises an error.
+        5. In Logarithm function if the input number is <=0 program raises an error.
+
+Pseudo Code:
+            #define ll long long int
+            int add(int first, int second)  return first+second;
+            int sub(int,first, int second)  return first-second;
+            ll  mul(int first, int second):
+                ll res=0;
+                for i in range of (1,second+1) res+=first;
+                return res;
+            int div(int first, int second):
+                int cnt=0
+                if(second==0)   return -1
+                elif(second<0 || first <0)   return -2
+                while(first>=second):
+                    ++cnt
+                    first-=second
+                return cnt
+            int mod(int first, int second):
+                int result,flag=first
+                if(second<=0):   return -1
+                if(first<0):    flag=-first
+                result=flag
+                while (result >= second)
+                    result -= second
+                if(first>=0)    return result
+                else return (second-result)
+            ll square(int num): return mul(num,num)
+            int square_root(int num):
+                if(num<0)   return -1
+                k = 0,s=0
+                while (s <= num):#returns floor of square root
+                    s = s+k+k+1#'s' stores the square of the number 'k'
+                    k = k+1#'k' stores the root of 's'
+            return k-1#returns answer
+            int log_2(int num):
+                flag=0,cnt=0;
+                if(num<=0)  return -1;//Invalid number
+                for(int i=1;i<num;i=mul(i,2))   ++cnt;//checking and incrementing if no. lies b/w 2^i and 2^(i+1)
+            return cnt;
+            int main(){
+                while(1):
+                    print(menu)
+                    scan(choice)
+                    if(choice==9):   break
+                    switch(choice){
+                    Asking for respective inputs and printing the respective errors or outputs on console
+                    }
+            }
+            
+            

@@ -1,0 +1,40 @@
+Design Document of Combination
+
+Choice of data types:
+        1. I chose int data type for inputs because they both are less than 15 as entered by user
+        2. I chose long long int type for xcy calculation as 15! exceeds int data range and the data range of "long" varies with architecture of system.
+           (https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)
+
+Flow of Program:
+        1. Program scans inputs from the user. And then, inputs are received.
+        2. After taking the input from the user, program checks whether those are valid inputs,i.e, x>0,y>=0 x>=y
+            it prints Error statement if the condition is not true.
+        3. If the valid input is received, the program calculates the factorials of x,y,x-y.
+        4. As the factorial(x)/factorial(y) is perfectly integer (given x>=y), we store it in xcy and then we divide xcy with factorial(x-y).
+        5. Hence xcy is our answer, we print it.
+        6. For calculation of factorial, I have used a function which takes a number and calculates its factorial.
+        7. The return type of function is long long int for the same reason as described in Choice of Data Types.
+        8. If input number to function is 0 it returns "1" as 0!=1.
+        8. Else, As the basic definition of factorial of an number "n" is 1*2*3*...*n, I have used a for loop and calculated it
+           by initializing fact=1, and fact*=i starting from i=2.
+        9. Then finally I retuned fact from the function.
+
+Error Handling:
+        1. If the input integers x or y is >15 or x<y or x<0 or y<0, we print the error message.
+
+Pseudo Code:
+            def long long int fac(int x):
+                if(x==0):    return 1
+                long long int fact=1
+                for(int i=2; i<=x; i++) fact*=i
+                return fact
+            int x,y
+            long long int xcy
+            read(x,y) from user
+            if(x>=y && x>0 && y>=0):
+                xcy=fac(x)/fac(y)
+                xcy/=fac(x-y)
+                print(xcy)
+            else: print(Incorrect Input!!)
+            
+            

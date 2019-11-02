@@ -1,0 +1,61 @@
+Design Document of Bank Application
+
+Choice of data types:
+        1. I chose long long int data type for initial balance, debit and credit as they may easily exceed 1e9
+        2. I chose char for "sel" element as for selecting we get char as input
+
+Flow of Program:
+        1. Program scans input from the user,i.e the no. of opeations the user wants to perform And then, input is received.
+        2. After taking the input from the user, program checks whether it is a valid input,i.e, if input is <=0 or >0.
+            if <=0 it asks again the user to input a valid value till he enters a positive value, else the workflow continues.
+        3. After receiving a valid input program asks the user to to Enter the initial Balance.(The user is assumed to provide a positive Inital balance)
+        4. For each of the Iteration the program asks the user to either Add, Withdraw or Show balance. I have used a For loop
+           for implementing this and switch case for implementing the decison control
+        5. If sel is "a" then the program adds the specified credit value to the existing balance else if sel is "w" it removes the 
+           specified debit value from the existing value else if sel is "p" program displays the current available balance.
+        6. Else if sel is not among "a", "w, or "p" then it prints a default error message and continues the work flow.
+
+Error Handling:
+        1. If the input integer(The no. of operations "N") is less than or equal to 0, the program prints an error 
+           message and again asks the user to Enter a valid value for "N".
+        2. If the withdrawing debit amount is greater than the existing total amount the Program Prints an Error message that 
+           the balance is insufficient.
+        3. If sel is not among "a", "w, or "p" then it prints a default error message and continues the work flow.
+        4. Using a whitespace for %c for preventing new line buffer in scanf().
+           The %c conversion specifier won't automatically skip any leading whitespace,
+           so if there's a stray newline in the input stream (from a previous entry, for example)
+           the scanf call will consume it immediately, hence for handling it I wrote scanf(" %c", &sel);
+
+Pseudo Code:
+
+while(int(input(N))==true and N<=0):
+    print("Enter a Valid Value for N")
+int(input(in_bal))
+for itr in range(1,N+1):
+    input(sel)
+    switch(s):
+        case 'w':
+            print("WithdrawAmount")
+            input(debit)
+            if (in_bal - debit >= 0):
+                printf("Success \n");
+                in_bal -= debit;
+            else:
+                printf("Error! Insufficient Balance \n")
+            break
+        
+        case 'a':
+            print("AddAmount")
+            input(credit)
+            print("Success")
+            in_bal += credit
+            break
+        
+        case 'p':
+            print("GetBalance")
+            printf(in_bal)
+            break
+        
+        default :
+            print("Error! Please enter the correct Selection")
+            break

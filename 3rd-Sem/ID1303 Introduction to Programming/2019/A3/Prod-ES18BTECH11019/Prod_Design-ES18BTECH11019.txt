@@ -1,0 +1,31 @@
+Design Document of Prouct of even Positive integers
+
+Choice of data types:
+        1. I chose int data type for input and variable for checking whether the value is less than or equal to input
+        2. I chose long long int type for storing prod because product can easily exceed 10^9.
+
+Flow of Program:
+        1. Program scans input from the user. And then, input is received.
+        2. After taking the input from the user, program checks whether it is a valid input,i.e, if input is <=0 or >33 or ==1 
+            it prints Error or Overflow or blank line respectively.
+        3. Else then it is a valid input then the program runs a loop from 2 to check if it is even,
+            prints the number if it is even and stores the value of product of even no's up to that number in a variable 
+            prod which was previously initialized to '1' before.
+
+Error Handling:
+        1. If the input integer is less than or equal to 0, the program returns and error statement and ends.
+        2. If the input integer is exactly 1 , then the program prints a blank line and ends.
+        3. If the input integer is >33, the program prints Overflow and ends.
+
+Pseudo Code:
+            i=2,prod=1
+            if(N<=0): print("Error Message")
+            elif(N==1): print(newline)
+            elif(N>33): print("Overflow")
+            else:
+                while(i<=N):
+                    if (i % 2 == 0): 
+                        print(i)
+                        prod *= i;
+                    i++
+                print(prod)

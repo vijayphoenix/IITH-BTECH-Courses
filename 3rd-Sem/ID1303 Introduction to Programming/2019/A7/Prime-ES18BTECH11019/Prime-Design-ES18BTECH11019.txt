@@ -1,0 +1,56 @@
+Design Document of Prime
+
+Choice of data types:
+        1. I chose long long int data type for inputs because input will be a 10 digit number
+          And The data range of "long" varies with architecture of system.
+           (https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)
+        2. For remaining I chose int data type.
+        3. For scanning each digit I chose char as input data type.
+
+Flow of Program:
+        1. Program scans inputs from the user. And then, input is received.
+        2. I have taken input digit by digit, if the input is a valid non-negative digit I have incremented cnt.
+        3. if(cnt==10 and first character is not '-') it means that the input is a valid 10 digit number, for it we should print the result.
+        4. For Finding the sum of prime digits I have written a Recursive Function, as,
+            int res(long long int num) {
+                    if(num!=0) {
+                        if (num % 10 == 2 || num % 10 == 3 || num % 10 == 5 || num % 10 == 7)
+                            return (num % 10 + res(num / 10));
+                        else return res(num / 10);
+                    }
+                    else return 0;
+                }
+        5. In above function, I have checked if last digit is a prime number, if its prime then I added it to result else I discarded.
+        6. As I have scanned each of the char, I have converted it to a 10-digit number assuming that its a perfect valid
+            number(I have checked this case as cnt==10) and then I stored this in long long int.
+        7. If the input is invalid, i.e cnt is other than 10 then we print the error message.
+
+Error Handling:
+        1. If the input number is other than a 10-digit number Error message will be printed
+        2. If the input contains either a negative or less than 10 digits Error message will be printed.
+        3. I have even handled the case such as first nine '0's and last digit is prime, then it shows result as last number.
+            I have took the number with leading zeroes as valid input and also handled it.
+
+Pseudo Code:
+            def isDigit(char a):
+                if (a >= '0' && a <= '9'):
+                    return 1
+                else:
+                    return 0;
+            def res(num):
+                if(num!=0):
+                    if (num % 10 == 2 or num % 10 == 3 or num % 10 == 5 or num % 10 == 7):
+                        return (num % 10 + res(num / 10))
+                    else: return res(num / 10)
+                else: return 0
+            flag=0
+            scanf("%c",&ch)
+            if(ch=='-'): flag=1
+            while (ch!='\n'):
+                cnt += 1;
+                if(isDigit(ch)): sum += (ch - '0') * pow(10, 10 - cnt)
+                scanf("%c",&ch)
+            if (cnt == 10 and flag==0):  print(res(sum))
+            else:   print("INCORRECT INPUT!! Please enter again...")
+            
+            

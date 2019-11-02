@@ -1,0 +1,8 @@
+For the smooth flow and readability of the program I've took the advantage of Switch Case Statement rather than Writing all if else statements.
+A switch looks much cleaner when you have to combine cases. Ifs  are quite vulnerable to errors too.
+As in the question it is given that the two numbers should be taken as integers, the operations of Addition, Subtraction and Multiplication are quite Straightforward
+Wheras coming to division there are two cases,i.e, when divisor is '0' and when it is non-zero. When Its '0' we throw an error other else we print the Division.
+For implementing the above case I took the advantage of short hand if-else statement.
+For implementing the second case (when a/b is non-zero), as both 'a' and 'b' are both integers there divsion is also integer, so, I have type casted the division
+by doing something like "(a*1.0)/b" and hence printed it in a double type (double can store more bits than float).
+Hence Without declaring another variable as double and assigning its value to the float divison I have implemented it directly.
