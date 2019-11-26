@@ -21,9 +21,9 @@ struct client{
 };
 
 pthread_t thread[1024];
-// char name[1024][100];
+char name[1024][100];
 struct client Client[1024];
-int clientCount = 0;
+int clientCount = 0, nameCount = 0;
 
 void recieveData(char * buffer, struct client* cInfo){
 	memset(buffer, 0, BUFSIZE);
@@ -54,7 +54,7 @@ void * host(void * c){
 			int l = 0;
 			for(int i = 0 ; i < clientCount ; i ++)
 				if(i != cInfo -> index)
-					l += snprintf(buffer + l, BUFSIZE - 1, "Client %d\n", i + 1);
+					l += snprintf(buffer + l, BUFSIZE - 1, "Client %d: %s", i + 1, name[cInfo -> index]);
 			sendData(buffer, cInfo -> clntSock);
 		}
 		else if(strcmp(buffer,"Send") == 0){
@@ -62,6 +62,12 @@ void * host(void * c){
 			int temp = atoi(buffer) - 1;
 			recieveData(buffer, cInfo);
 			sendData(buffer, Client[temp].clntSock);
+		}
+		else if(strcmp(buffer,"User@name") == 0){
+			recieveData(buffer, cInfo);
+			strcpy(name[cInfo -> index],buffer);
+			printf("Username Registered: %s\n",name[cInfo -> index]);
+	        fflush(stdout);
 		}
 	}
 	return NULL;

@@ -16,22 +16,20 @@ void recieveData(char * buffer, int sockfd){
 		perror("recv() failed");
 		exit(-1);
 	}
-    // printf(" haga");
 	buffer[recvLen] = '\0';
 }
 
 void sendData(char * buffer, int sockfd, ssize_t len){
-	// ssize_t sentLen = send(sockfd, buffer, len, 0);
-	ssize_t sentLen = send(sockfd, buffer, BUFSIZE - 1, 0);
+	ssize_t sentLen = send(sockfd, buffer, len, 0);
 	if (sentLen < 0) {
 		perror("send() failed");
 		exit(-1);
 	}
-    // else if (sentLen != len){
-    //     perror("send(): sent unexpected number of bytes");
-	// 	exit(-1);
-    // }
-	// memset(buffer, 0, BUFSIZE);
+    else if (sentLen != len){
+        perror("send(): sent unexpected number of bytes");
+		exit(-1);
+    }
+	memset(buffer, 0, BUFSIZE);
 }
 
 
@@ -40,7 +38,7 @@ void * recieve(void * sockID){
     while(1){
         char buffer[BUFSIZE];
         recieveData(buffer, sockfd);
-        printf("\n<< ");
+        printf("\n<<");
         printf("%s\n",buffer);
         printf(">> ");
         fflush(stdout);
@@ -80,19 +78,19 @@ int main() {
 
     printf("Connected to server: %s\nPort: %hu\n", servIP, servPort);
 
-    // printf("Enter: <User_ID>\n");
-    // ssize_t length;
-    // char id[BUFSIZE] = "User@name";
-    // length = strlen(id);
-    // sendData(id, sockfd, length);
-    // scanf("%s",id);
-    // fgets(id, BUFSIZE, stdin);
-    // length = strlen(id);
-    // sendData(id, sockfd, length);
+    printf("Enter: <User_ID>\n");
+    ssize_t length;
+    char id[BUFSIZE] = "User@name";
+    length = strlen(id);
+    sendData(id, sockfd, length);
+    scanf("%s",id);
+    length = strlen(id);
 
-    // printf("------------------- Welcome %s---------------------\n\n" , id);
-    // printf("Enter:\nCommand 1 ->    User_List - To get list of all the users\nCommand 2 ->    Send <ID> <Msg> - To send msg to user with <ID> user_id\n\n");
-    // printf("Happy Chatting!!!\n\n\n");
+    printf("------------------- Welcome %s---------------------\n\n" , id);
+    printf("Enter:\nCommand 1 ->    User_List - To get list of all the users\nCommand 2 ->    Send <ID> <Msg> - To send msg to user with <ID> user_id\n\n");
+    printf("Happy Chatting!!!\n\n\n");
+    
+    sendData(id, sockfd, length);
 
     pthread_t thread;
     pthread_create(&thread, NULL, recieve, (void *) &sockfd );
