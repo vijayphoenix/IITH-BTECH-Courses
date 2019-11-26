@@ -7,6 +7,16 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
+// char* exec(const char* cmd) {
+//     char buffer[128];
+//     // char result[] = "";
+//     FILE* pipe = popen(cmd, "r");
+// 	while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+//         result += buffer;
+//     pclose(pipe);
+//     return result;
+// }
+
 #define BUFSIZE 1024
 
 static const int MAXPENDING = 10; // Maximum outstanding connection requests
@@ -123,5 +133,4 @@ int main(){
 
 	for(int i = 0 ; i < clientCount ; i ++)
 		pthread_join(thread[i],NULL);
-
 }

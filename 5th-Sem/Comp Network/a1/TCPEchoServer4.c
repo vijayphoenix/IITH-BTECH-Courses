@@ -46,25 +46,24 @@ int main(){
 		exit(-1);
 	}
     printf("Server hosted on IP: %s\nListening on Port: %hu ..........\n", servIP, servPort);
-	while(1){
-		struct sockaddr_in clntAddr;
-		socklen_t clntAddrLen = sizeof(clntAddr);
+	struct sockaddr_in clntAddr;
+	socklen_t clntAddrLen = sizeof(clntAddr);
 
-		// Wait for a client to connect
-		int clntSock = accept(servSock, (struct sockaddr *) &clntAddr, &clntAddrLen);
-		if (clntSock < 0) {
-			perror("accept() failed");
-			exit(-1);
-		}
+	// Wait for a client to connect
+	int clntSock = accept(servSock, (struct sockaddr *) &clntAddr, &clntAddrLen);
+	if (clntSock < 0) {
+		perror("accept() failed");
+		exit(-1);
+	}
 
-		char clntIpAddr[INET_ADDRSTRLEN];
-		if (inet_ntop(AF_INET, &clntAddr.sin_addr.s_addr, 
-				clntIpAddr, sizeof(clntIpAddr)) != NULL) {
-			printf("----\nHandling client %s %d\n", 
-					clntIpAddr, ntohs(clntAddr.sin_port));
-		} else {
-			puts("----\nUnable to get client IP Address");
-		}
+	char clntIpAddr[INET_ADDRSTRLEN];
+	if (inet_ntop(AF_INET, &clntAddr.sin_addr.s_addr, 
+			clntIpAddr, sizeof(clntIpAddr)) != NULL) {
+		printf("----\nHandling client %s %d\n", 
+				clntIpAddr, ntohs(clntAddr.sin_port));
+	} else {
+		puts("----\nUnable to get client IP Address");
+	}
 
 		// Receive data
 		char buffer[BUFSIZE];
@@ -109,7 +108,6 @@ int main(){
 
 		close(clntSock);
 		// printf("End of Server Loop\n");
-	}
 
 	printf("End of Program\n");
 

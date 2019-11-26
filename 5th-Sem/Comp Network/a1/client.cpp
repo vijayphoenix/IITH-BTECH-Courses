@@ -38,8 +38,7 @@ void * recieve(void * sockID){
     while(1){
         char buffer[BUFSIZE];
         recieveData(buffer, sockfd);
-        printf("\n<<");
-        printf("%s\n",buffer);
+        printf("\n%s\n",buffer);
         printf(">> ");
         fflush(stdout);
     }
@@ -49,9 +48,9 @@ int main() {
     char servIP[100] = "127.0.0.1"; 
     in_port_t servPort = 8002;
 	printf("Enter: <Server Address>\n");
-    scanf("%s", servIP);
+    // scanf("%s", servIP);
     printf("Enter: <Port>\n");
-    scanf("%hu", &servPort);
+    // scanf("%hu", &servPort);
 
 	// Create a socket
 	int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -87,8 +86,12 @@ int main() {
     length = strlen(id);
 
     printf("------------------- Welcome %s---------------------\n\n" , id);
-    printf("Enter:\nCommand 1 ->    User_List - To get list of all the users\nCommand 2 ->    Send <ID> <Msg> - To send msg to user with <ID> user_id\n\n");
-    printf("Happy Chatting!!!\n\n\n");
+    printf("Enter:\nCommand 1 ->    User_List - To get list of all the users\n");
+    printf("Command 2 ->    Send <ID_Number> <Msg> - To send msg to user with <ID_Number> ID\n");
+    printf("Command 3 ->    Command <CMD> - Execute <CMD> bash command on the server and get the output\n");
+    printf("Command 4 ->    Bye - Bye!\n\n");
+
+    printf("Happy Chatting!!!\n\n");
 
     sendData(id, sockfd, length);
 
@@ -104,7 +107,14 @@ int main() {
 
         if(strcmp(input,"User_List") == 0){
             sendData(input, sockfd, len);
-        } else if (strcmp(input,"Send") == 0){
+        }
+        else if(strcmp(input, "Command") == 0){
+            sendData(input, sockfd, len);
+            scanf("%[^\n]s",input);
+            len = strlen(input);
+            sendData(input, sockfd, len);
+        }
+        else if (strcmp(input,"Send") == 0){
             sendData(input, sockfd, len);
             
             scanf("%s",input);
@@ -115,5 +125,9 @@ int main() {
             len = strlen(input);
             sendData(input, sockfd, len);
         }
+        else if(strcmp(input,"Bye") == 0){
+            break;
+        }
+        else printf("Wrong command! Try again");
     }
 }
