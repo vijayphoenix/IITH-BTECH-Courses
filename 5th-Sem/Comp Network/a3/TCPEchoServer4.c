@@ -1,110 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <arpa/inet.h>
-#include <pthread.h>
-struct client_info {
-   int sockno;
-   char ip[INET_ADDRSTRLEN];
-};
-int clients[100];
-int n = 0;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-void sendtoall(char *msg,int curr)
-{
-   int i;
-   pthread_mutex_lock(&mutex);
-   for(i = 0; i < n; i++) {
-      if(clients[i] != curr) {
-         if(send(clients[i],msg,strlen(msg),0) < 0) {
-            perror("sending failure");
+#include <netdb.h>
+
+
+#define BUFSIZE 1024
+
+static const int MAXPENDING = 5; // Maximum outstanding connection requests
+
+int main(int argc, char ** argv) {
+
+	if (argc != 2) {
+		perror("<server port>");
+		exit(-1);
+	}
+
+	in_port_t servPort = atoi(argv[1]); // Local port
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    char hostName[100]= "ip6-localhost";
+
+    ssize_t nread;
+
+    memset(&hints, 0, sizeof(struct addrinfo));
+    hints.ai_family = AF_UNSPEC; // IPv4 or v6
+    hints.ai_socktype = SOCK_STREAM;// Hardcoded TCP as dummy
+    hints.ai_protocol = IPPROTO_TCP; // Hardcoded TCP as dummy
+    hints.ai_flags = AI_CANONNAME;
+
+    int s = getaddrinfo(hostName, NULL, &hints, &result);
+    if (s != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
+        exit(EXIT_FAILURE);
+    }
+    int servSock;
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        servSock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+        if (servSock == -1)
             continue;
-         }
-      }
-   }
-   pthread_mutex_unlock(&mutex);
-}
-void *recvmg(void *sock)
-{
-   struct client_info cl = *((struct client_info *)sock);
-   char msg[500];
-   int len;
-   int i;
-   int j;
-   while((len = recv(cl.sockno,msg,500,0)) > 0) {
-      msg[len] = '\0';
-      sendtoall(msg,cl.sockno);
-      memset(msg,'\0',sizeof(msg));
-   }
-   pthread_mutex_lock(&mutex);
-   printf("%s disconnected\n",cl.ip);
-   for(i = 0; i < n; i++) {
-      if(clients[i] == cl.sockno) {
-         j = i;
-         while(j < n-1) {
-            clients[j] = clients[j+1];
-            j++;
-         }
-      }
-   }
-   n--;
-   pthread_mutex_unlock(&mutex);
+        if (bind(servSock, rp->ai_addr, rp->ai_addrlen) == 0)
+            break;                  /* Success */
 
-}
+        // close(servSock);
+    }
 
-int main(int argc,char *argv[])
-{
-   struct sockaddr_in my_addr,their_addr;
-   int my_sock;
-   int their_sock;
-   socklen_t their_addr_size;
-   int portno;
-   pthread_t sendt,recvt;
-   char msg[500];
-   int len;
-   struct client_info cl;
-   char ip[INET_ADDRSTRLEN];;
-   ;
-   if(argc > 2) {
-      printf("too many arguments");
-      exit(1);
-   }
-   portno = atoi(argv[1]);
-   my_sock = socket(AF_INET,SOCK_STREAM,0);
-   memset(my_addr.sin_zero,'\0',sizeof(my_addr.sin_zero));
-   my_addr.sin_family = AF_INET;
-   my_addr.sin_port = htons(portno);
-   my_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
-   their_addr_size = sizeof(their_addr);
+    if (rp == NULL) {               /* No address succeeded */
+        fprintf(stderr, "Could not bind\n");
+        exit(EXIT_FAILURE);
+    }
+    struct sockaddr_storage *common;
+    // struct sockaddr_in6 *saIn6;
+    char addrString[INET6_ADDRSTRLEN];
+    memset(addrString, 0, sizeof(addrString));
+    switch (rp->ai_family) {
+        case AF_INET:
+            common = (struct sockaddr_storage *) rp->ai_addr;
+            inet_ntop(rp->ai_family, &common->sin_addr.s_addr, addrString, sizeof(addrString));
+        break;
+        case AF_INET6:
+            common = (struct sockaddr_storage *) rp->ai_addr;
+            inet_ntop(rp->ai_family, &common->sin6_addr.s6_addr, addrString, sizeof(addrString));
+        break;
+        default:
+        break;
+    }
 
-   if(bind(my_sock,(struct sockaddr *)&my_addr,sizeof(my_addr)) != 0) {
-      perror("binding unsuccessful");
-      exit(1);
-   }
+    struct sockaddr_storage peer_addr;
+    socklen_t peer_addr_len =  sizeof(struct sockaddr_storage);
 
-   if(listen(my_sock,5) != 0) {
-      perror("listening unsuccessful");
-      exit(1);
-   }
+    // for (;;) {
+    //     struct sockaddr_storage peer_addr;
+    //     socklen_t peer_addr_len =  sizeof(struct sockaddr_storage);
 
-   while(1) {
-      if((their_sock = accept(my_sock,(struct sockaddr *)&their_addr,&their_addr_size)) < 0) {
-         perror("accept unsuccessful");
-         exit(1);
-      }
-      pthread_mutex_lock(&mutex);
-      inet_ntop(AF_INET, (struct sockaddr *)&their_addr, ip, INET_ADDRSTRLEN);
-      printf("%s connected\n",ip);
-      cl.sockno = their_sock;
-      strcpy(cl.ip,ip);
-      clients[n] = their_sock;
-      n++;
-      pthread_create(&recvt,NULL,recvmg,&cl);
-      pthread_mutex_unlock(&mutex);
-   }
-   return 0;
 }

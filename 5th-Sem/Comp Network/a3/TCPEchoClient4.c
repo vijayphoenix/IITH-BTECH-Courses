@@ -1,69 +1,112 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <arpa/inet.h>
-#include <pthread.h>
-void *recvmg(void *sock)
-{
-   int their_sock = *((int *)sock);
-   char msg[500];
-   int len;
-   while((len = recv(their_sock,msg,500,0)) > 0) {
-      msg[len] = '\0';
-      fputs(msg,stdout);
-      memset(msg,'\0',sizeof(msg));
-   }
-}
-int main(int argc, char *argv[])
-{
-   struct sockaddr_in their_addr;
-   int my_sock;
-   int their_sock;
-   int their_addr_size;
-   int portno;
-   pthread_t sendt,recvt;
-   char msg[500];
-   char username[100];
-   char res[600];
-   char ip[INET_ADDRSTRLEN];
-   int len;
+#include <netdb.h>
 
-   if(argc > 3) {
-      printf("too many arguments");
-      exit(1);
-   }
-   portno = atoi(argv[2]);
-   strcpy(username,argv[1]);
-   my_sock = socket(AF_INET,SOCK_STREAM,0);
-   memset(their_addr.sin_zero,'\0',sizeof(their_addr.sin_zero));
-   their_addr.sin_family = AF_INET;
-   their_addr.sin_port = htons(portno);
-   their_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+#define BUFSIZE 1024
 
-   if(connect(my_sock,(struct sockaddr *)&their_addr,sizeof(their_addr)) < 0) {
-      perror("connection not esatablished");
-      exit(1);
-   }
-   inet_ntop(AF_INET, (struct sockaddr *)&their_addr, ip, INET_ADDRSTRLEN);
-   printf("connected to %s, start chatting\n",ip);
-   pthread_create(&recvt,NULL,recvmg,&my_sock);
-   while(fgets(msg,500,stdin) > 0) {
-      strcpy(res,username);
-      strcat(res,":");
-      strcat(res,msg);
-      len = write(my_sock,res,strlen(res));
-      if(len < 0) {
-         perror("message not sent");
-         exit(1);
-      }
-      memset(msg,'\0',sizeof(msg));
-      memset(res,'\0',sizeof(res));
-   }
-   pthread_join(recvt,NULL);
-   close(my_sock);
+int main(int argc, char **argv) {
 
+   struct addrinfo hints;
+   struct addrinfo *result, *rp;
+
+	if (argc != 4) {
+		perror("<Server Address> <Server Port> <Echo Word>");
+		exit(-1);
+	}
+	
+	char *servIP = argv[1];
+	char *echoString = argv[3];
+	
+	// Set port num
+	in_port_t servPort = atoi(argv[2]);
+	
+	// int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	// if (sockfd < 0) {
+	// 	perror("socket() failed");
+	// 	exit(-1);
+	// }
+	struct sockaddr_in *servAddr_In4;
+   struct sockaddr_in6 *servAddr_In6;
+   struct sockaddr_storage peer_addr;
+   char addrString[INET6_ADDRSTRLEN];
+   memset(addrString, 0, sizeof(addrString));
+	
+
+   memset(&hints, 0, sizeof(struct addrinfo));
+   hints.ai_family = AF_UNSPEC; // IPv4 or v6
+   hints.ai_socktype = SOCK_STREAM;// Hardcoded TCP as dummy
+   hints.ai_protocol = IPPROTO_TCP; // Hardcoded TCP as dummy
+   hints.ai_flags = AI_CANONNAME;
+   int s = getaddrinfo(servIP, NULL, &hints, &result);
+// for (rp = result; rp != NULL; rp = rp->ai_next) {
+   // I want canonical name!!
+   switch (rp->ai_family) {
+      case AF_INET:
+         printf("ip4");
+         servAddr_In4 = (struct sockaddr_in *) rp->ai_addr;
+         inet_ntop(rp->ai_family, &servAddr_In4->sin_addr.s_addr, addrString, sizeof(addrString));
+      break;
+      case AF_INET6:
+         printf("ip6");
+         servAddr_In6 = (struct sockaddr_in6 *) rp->ai_addr;
+         inet_ntop(rp->ai_family, &servAddr_In6->sin6_addr.s6_addr, addrString, sizeof(addrString));
+      break;
+   }
+	// // Set the server address
+	// memset(&servAddr_ip4, 0, sizeof(servAddr_ip4));
+	// servAddr_ip4.sin_family = AF_INET;
+	// int err = inet_pton(AF_INET, servIP, &servAddr_ip4.sin_addr.s_addr);
+	// if (err <= 0) {
+	// 	perror("inet_pton() failed");
+	// 	exit(-1);
+	// }
+	// servAddr_ip4.sin_port = htons(servPort);
+	
+	// // Connect to server
+	// if (connect(sockfd, (struct sockaddr *) &servAddr_ip4, sizeof(servAddr_ip4)) < 0) {
+	// 	perror("connect() failed");
+	// 	exit(-1);
+	// }
+	
+	// size_t echoStringLen = strlen(echoString);
+	
+	// // Send string to server
+	// ssize_t sentLen = send(sockfd, echoString, echoStringLen, 0);
+	// if (sentLen < 0) {
+	// 	perror("send() failed");
+	// 	exit(-1);
+	// } else if (sentLen != echoStringLen) {
+	// 	perror("send(): sent unexpected number of bytes");
+	// 	exit(-1);
+	// }
+
+	// // Receive string from server
+	// unsigned int totalRecvLen = 0;
+
+	// fputs("Received: ", stdout);
+	// while (totalRecvLen < echoStringLen) {
+	// 	char buffer[BUFSIZE];
+	// 	memset(buffer, 0, BUFSIZE);
+	// 	ssize_t recvLen = recv(sockfd, buffer, BUFSIZE - 1, 0);
+	// 	if (recvLen < 0) {
+	// 		perror("recv() failed");
+	// 		exit(-1);
+	// 	} else if (recvLen == 0) {
+	// 		perror("recv() connection closed prematurely");
+	// 		exit(-1);
+	// 	}
+	
+	// 	totalRecvLen += recvLen;
+	// 	buffer[recvLen] = '\n';
+	// 	fputs(buffer, stdout);	
+	// }
+	
+	// close(sockfd);
+	// exit(0);
 }
