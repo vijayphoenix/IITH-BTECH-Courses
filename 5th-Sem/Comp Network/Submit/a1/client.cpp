@@ -88,10 +88,10 @@ int main() {
     length = strlen(id);
 
     printf("------------------- Welcome %s---------------------\n\n" , id);
-    printf("Features:\nFeature 1 ->    User_List - To get list of all the users\n");
-    printf("Feature 2 ->    Send <ID_Number> <Msg> - To send msg to user with <ID_Number> ID\n");
-    printf("Feature 3 ->    Command <CMD> - Execute <CMD> bash command on the server and get the output\n");
-    printf("Feature 4 ->    Bye - Bye!\n\n");
+    printf("Features:\nCommand 1 ->    User_List - To get list of all the users\n");
+    printf("Command 2 ->    Send <ID_Number> <Msg> - To send msg to user with <ID_Number> ID\n");
+    printf("Command 3 ->    Command <CMD> - Execute <CMD> bash command on the server and get the output\n");
+    printf("Command 4 ->    Bye - Bye!\n\n");
 
     printf("Happy Chatting!!!\n\n");
 

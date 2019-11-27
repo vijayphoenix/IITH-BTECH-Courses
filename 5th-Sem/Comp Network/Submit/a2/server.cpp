@@ -87,10 +87,12 @@ void * host(void * c){
 			recieveData(buffer, cInfo);
 			int temp = atoi(buffer) - 1;
 			recieveData(buffer, cInfo);
+			printf("Message received from %s\n",name[cInfo -> index]);
             char tmp[BUFSIZE];
             int l = 0;
             l = snprintf(tmp + l, BUFSIZE - 1, "Msg from Client %d: %s -> ", cInfo -> index + 1, name[cInfo -> index]);
             l = snprintf(tmp + l, BUFSIZE - 1, "%s\n", buffer);
+			printf("Message sent to %s\n",name[temp]);
 			sendData(tmp, Client[temp].clntSock);
             memset(tmp, 0, BUFSIZE);
             memset(buffer, 0, BUFSIZE);
@@ -116,9 +118,9 @@ int main(){
     char servIP[100] = "127.0.0.1"; 
     in_port_t servPort = 8002;
 	printf("Enter: <Server Address>\n");
-    scanf("%s", servIP);
+    // scanf("%s", servIP);
     printf("Enter: <Port>\n");
-    scanf("%hu", &servPort);
+    // scanf("%hu", &servPort);
 
 	// create socket for incoming connections
 	int servSock;

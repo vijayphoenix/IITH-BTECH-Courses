@@ -6,11 +6,13 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <pthread.h>
+#include <atomic>
 
 #define BUFSIZE 2048
+std::atomic<bool> endProg (false);
 
 // Receive Data from server
-void recieveData(char * buffer, int sockfd){
+int recieveData(char * buffer, int sockfd){
 	memset(buffer, 0, BUFSIZE);
 	ssize_t recvLen = recv(sockfd, buffer, BUFSIZE - 1, 0);
 	if (recvLen < 0) {
@@ -18,6 +20,7 @@ void recieveData(char * buffer, int sockfd){
 		exit(-1);
 	}
 	buffer[recvLen] = '\0';
+    return recvLen;
 }
 
 // Send Data to server
@@ -37,22 +40,30 @@ void sendData(char * buffer, int sockfd, ssize_t len){
 
 void * recieve(void * sockID){
     int sockfd = *((int *) sockID);
+    int temp;
     while(1){
         char buffer[BUFSIZE];
-        recieveData(buffer, sockfd);
+        temp = recieveData(buffer, sockfd);
+        if(temp == 0){
+            printf("\nServer disconnected\n>>");
+            fflush(stdout);
+            endProg =true;
+            return NULL;
+        }
         printf("\n%s\n",buffer);
         printf(">> ");
         fflush(stdout);
     }
+    return NULL;
 }
 
 int main() {
     char servIP[100] = "127.0.0.1"; 
     in_port_t servPort = 8002;
 	printf("Enter: <Server Address>\n");
-    scanf("%s", servIP);
+    // scanf("%s", servIP);
     printf("Enter: <Port>\n");
-    scanf("%hu", &servPort);
+    // scanf("%hu", &servPort);
 
 	// Create a socket
 	int sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -105,6 +116,7 @@ int main() {
        	size_t len;
         char input[BUFSIZE];
         scanf("%s",input);
+        if(endProg)break;
         len = strlen(input);
 
         if(strcmp(input,"User_List") == 0){
