@@ -7,7 +7,7 @@
 #include <arpa/inet.h>
 #include <pthread.h>
 
-#define BUFSIZE 1024
+#define BUFSIZE 2048
 
 void recieveData(char * buffer, int sockfd){
 	memset(buffer, 0, BUFSIZE);
@@ -128,6 +128,9 @@ int main() {
         else if(strcmp(input,"Bye") == 0){
             break;
         }
-        else printf("Wrong command! Try again");
+        else {
+            printf("Wrong command! Try again\n");
+            fflush(stdout);
+        }
     }
 }

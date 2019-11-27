@@ -13,7 +13,7 @@
 #include <iostream>
 #include <array>
 
-#define BUFSIZE 1024
+#define BUFSIZE 2048
 
 static const int MAXPENDING = 10; // Maximum outstanding connection requests
 // static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -51,19 +51,20 @@ void sendData(char * buffer, int clntSock){
 
 void exec(const char* cmd,  struct client* cInfo) {
 	printf("Entering Command mode\n");
-	char buffer[128];
+	char buffer[BUFSIZE];
 	char result[BUFSIZE];
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
     if (!pipe) {
         throw std::runtime_error("popen() failed!");
     }
 	int l = 0;
-    while (fgets(buffer, BUFSIZE, pipe.get()) != nullptr) {
-		if(l >= 850)break;
+    while (fgets(buffer, 128, pipe.get()) != nullptr) {
+		if(l >= 1024)break;
 		l += snprintf(result + l, 127, "%s", buffer);
     }
 	sendData(result, cInfo -> clntSock);
-	// memset(result, 0, BUFSIZE);
+	memset(result, 0, BUFSIZE);
+    memset(buffer, 0, BUFSIZE);
 	printf("Exiting Command mode\n");
 }
 
@@ -78,14 +79,20 @@ void * host(void * c){
 			int l = 0;
 			for(int i = 0 ; i < clientCount ; i ++)
 				if(i != cInfo -> index)
-					l += snprintf(buffer + l, BUFSIZE - 1, "Client %d: %s", i + 1, name[cInfo -> index]);
+					l += snprintf(buffer + l, BUFSIZE - 1, "Client %d: %s\n", i + 1, name[i]);
 			sendData(buffer, cInfo -> clntSock);
 		}
 		else if(strcmp(buffer,"Send") == 0){
 			recieveData(buffer, cInfo);
 			int temp = atoi(buffer) - 1;
 			recieveData(buffer, cInfo);
-			sendData(buffer, Client[temp].clntSock);
+            char tmp[BUFSIZE];
+            int l = 0;
+            l = snprintf(tmp + l, BUFSIZE - 1, "Msg from Client %d: %s -> ", cInfo -> index + 1, name[cInfo -> index]);
+            l = snprintf(tmp + l, BUFSIZE - 1, "%s\n", buffer);
+			sendData(tmp, Client[temp].clntSock);
+            memset(tmp, 0, BUFSIZE);
+            memset(buffer, 0, BUFSIZE);
 		}
 		else if(strcmp(buffer,"User@name") == 0){
 			recieveData(buffer, cInfo);
