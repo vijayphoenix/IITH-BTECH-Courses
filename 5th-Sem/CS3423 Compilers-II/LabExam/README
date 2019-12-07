@@ -1,0 +1,58 @@
+Roll No.: CS17BTECH11040
+Name: Vijay Tadikamalla
+
+--------------------------------------------------------------------------------
+
+P1: Iptables
+--------------------------------
+Instructions to run:
+
+# Instructions to run, such as list of commands, or script, or Makefile
+
+Assumptions / Comments (if any):
+	
+# Is the program complete? Are there any assumptions made? Any other comments?
+
+
+
+P2: Polyhedral Calculator
+----------------------------------------
+Instructions to run:
+# Instructions to run, such as list of commands, or script, or Makefile
+
+Assumptions / Comments (if any):
+	
+# Is the program complete? Are there any assumptions made? Any other comments?
+
+
+
+P3: Rock, Paper, Scissors
+---------
+Instructions to run:
+
+It works with the default Makefile
+
+Assumptions / Comments (if any):
+	
+# Is the program complete? Are there any assumptions made? Any other comments?
+
+The program is complete.
+It is able to run on type of "valid" inputs like
+
+N==4
+K==5
+P10==PSRPP
+P20==PPRPS
+P30==RPPPS
+P40==SSSSS
+P10P20P30P40
+
+N ==4
+K==5
+P10==PSRPP
+P20== PPRPS
+P30==RPPPS
+P40   ==    SSSSS
+P10 P20 P30 P40.
+
+No error handling is done.
