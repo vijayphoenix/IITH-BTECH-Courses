@@ -11,12 +11,12 @@
 - N clients and 1 server Chat-room with Execute command functionality.
 - Protocol (IPv4/IPv6) independent server and client.
 
-**CS5590 (Foundations of Machine Learning)
+**CS5590 (Foundations of Machine Learning)**
 - Classification tasks
 - Clustering problems
 - Representation Learning tasks
 
-**CS6383 (Introduction to Compiler Engineering)
+**CS6383 (Introduction to Compiler Engineering)**
 - Introduction to LLVM.
 - LLVM analysis pass for finding Footprint of a Variable
 - LLVM transformation pass for Loop reversal
