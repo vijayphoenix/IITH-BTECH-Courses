@@ -8,10 +8,10 @@
 - ER diagrams
 - Relational Algebra and SQL Queries
 
-**CS5040(Linear Optimization)**
+**CS5040 Linear Optimization**
 - Simplex algorithm for degenerate and non-degenerate cases
 
-**CS5500 (Reinforcement Learning)**
+**CS5500 Reinforcement Learning**
 - Tabular Q / SARSA Learning
 - DQN and Policy Gradient
 - Deterministic Deep Policy gradient
