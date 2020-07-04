@@ -1,0 +1,19 @@
+sudo brctl addbr bri0
+sudo brctl addbr bri1
+sudo brctl addbr bri2
+sudo brctl addbr bri3
+sudo brctl addbr bri4
+sudo ip link set bri0 up
+sudo ip link set bri1 up
+sudo ip link set bri2 up
+sudo ip link set bri3 up
+sudo ip link set bri4 up
+sudo modprobe 8021q
+sudo vconfig add enp4s0f1 10
+sudo ip addr add 192.168.111.21/24 dev enp4s0f1.10
+sudo ip link set up enp4s0f1.10
+sudo brctl addif bri0 enp4s0f1.10
+sudo vconfig add enp4s0f1 20
+sudo ip addr add 192.168.114.21/24 dev enp4s0f1.20
+sudo ip link set up enp4s0f1.20
+sudo brctl addif bri4 enp4s0f1.20
